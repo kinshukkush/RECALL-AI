@@ -545,7 +545,7 @@ body {
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
-  height: 380px;
+  height: 480px;
 }
 .flashcard-inner {
   position: relative;
@@ -568,6 +568,22 @@ body {
   flex-direction: column;
   gap: 20px;
   border: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.flashcard-face::-webkit-scrollbar {
+  width: 6px;
+}
+.flashcard-face::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 16px 0;
+}
+.flashcard-face::-webkit-scrollbar-thumb {
+  background: rgba(108, 99, 255, 0.2);
+  border-radius: 10px;
+}
+.flashcard-face::-webkit-scrollbar-thumb:hover {
+  background: rgba(108, 99, 255, 0.4);
 }
 .flashcard-front {
   background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
@@ -650,6 +666,13 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  animation: slideDownFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top;
+}
+
+@keyframes slideDownFade {
+  0% { opacity: 0; transform: translateY(-10px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 .explanation-label {
   display: flex;

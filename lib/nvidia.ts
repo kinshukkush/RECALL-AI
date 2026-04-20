@@ -24,7 +24,7 @@ export async function callNvidiaAPI(messages: NvidiaMessage[]): Promise<string> 
   const response = await axios.post<NvidiaResponse>(
     NVIDIA_API_URL,
     {
-      model: 'google/gemma-3n-e4b-it',
+      model: 'meta/llama-3.1-8b-instruct',
       messages,
       max_tokens: 4096,
       temperature: 0.20,
@@ -39,7 +39,7 @@ export async function callNvidiaAPI(messages: NvidiaMessage[]): Promise<string> 
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      timeout: 60000,
+      timeout: 120000,
     }
   );
 
