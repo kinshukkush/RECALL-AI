@@ -33,7 +33,8 @@ export async function POST(request: NextRequest) {
     let rawText: string;
     try {
       rawText = await extractTextFromPDF(buffer);
-    } catch {
+    } catch (err) {
+      console.error('PDF Parse Error:', err);
       return NextResponse.json({ error: 'Failed to read PDF. Ensure it is not encrypted or corrupted.' }, { status: 422 });
     }
 
