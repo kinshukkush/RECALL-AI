@@ -1,65 +1,106 @@
-import Image from "next/image";
+import Link from 'next/link';
+import { Brain, Zap, RotateCcw, BarChart3, Upload, ArrowRight, BookOpen, Sparkles } from 'lucide-react';
 
-export default function Home() {
+const features = [
+  {
+    icon: Upload,
+    title: 'PDF Upload & Parsing',
+    desc: 'Drag and drop any PDF — textbooks, notes, papers. We extract and clean the content automatically.',
+  },
+  {
+    icon: Sparkles,
+    title: 'AI Flashcard Generation',
+    desc: 'Advanced AI analyzes your content and creates targeted questions with precise, concise answers.',
+  },
+  {
+    icon: RotateCcw,
+    title: 'Active Recall Practice',
+    desc: 'Animated 3D flip cards test your knowledge with one question at a time for focused learning.',
+  },
+  {
+    icon: Zap,
+    title: 'Spaced Repetition (SM-2)',
+    desc: 'The proven SM-2 algorithm schedules reviews at optimal intervals — never review too early or too late.',
+  },
+  {
+    icon: BarChart3,
+    title: 'Progress Dashboard',
+    desc: 'Track mastered cards, weak spots, and cards due today with a beautiful analytics dashboard.',
+  },
+  {
+    icon: BookOpen,
+    title: '"Explain Better" AI',
+    desc: 'Confused by an answer? Ask AI to simplify it with plain language and real-world examples.',
+  },
+];
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <>
+      {/* Hero */}
+      <section className="hero-section">
+        <div className="hero-inner">
+          <div className="hero-badge">
+            <Brain size={14} />
+            AI-Powered Learning
+          </div>
+          <h1 className="hero-title">
+            Transform PDFs into
+            <br />
+            <span className="gradient-text">Mastery-Level Knowledge</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="hero-subtitle">
+            RecallAI turns your study materials into intelligent flashcard decks.
+            Practice with spaced repetition, track your progress, and never forget what you learned.
           </p>
+          <div className="hero-buttons">
+            <Link href="/upload" className="btn-primary hero-btn-primary" id="hero-upload-btn">
+              <Upload size={20} />
+              Upload a PDF
+              <ArrowRight size={18} />
+            </Link>
+            <Link href="/dashboard" className="btn-secondary" id="hero-dashboard-btn">
+              <BarChart3 size={18} />
+              View Dashboard
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Features */}
+      <section className="features-section">
+        <h2 className="section-title">
+          Everything you need to <span className="gradient-text">learn faster</span>
+        </h2>
+        <p className="section-subtitle">
+          RecallAI combines proven cognitive science with modern AI to supercharge your learning.
+        </p>
+        <div className="features-grid">
+          {features.map(({ icon: Icon, title, desc }) => (
+            <div key={title} className="feature-card">
+              <div className="feature-icon-wrap">
+                <Icon size={24} />
+              </div>
+              <h3 className="feature-title">{title}</h3>
+              <p className="feature-desc">{desc}</p>
+            </div>
+          ))}
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* CTA */}
+      <section className="cta-section">
+        <div className="cta-card">
+          <h2 className="cta-title">Ready to study smarter?</h2>
+          <p className="cta-subtitle">
+            Upload your first PDF and have AI-generated flashcards ready in under a minute.
+          </p>
+          <Link href="/upload" className="btn-primary" id="cta-upload-btn">
+            <Upload size={18} />
+            Get Started — It&apos;s Free
+          </Link>
+        </div>
+      </section>
+    </>
   );
 }
