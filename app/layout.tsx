@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/Navbar';
+import Background3D from '@/components/Background3D';
 
 export const metadata: Metadata = {
   title: 'RecallAI — AI-Powered Flashcard Learning System',
@@ -17,14 +18,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>
+      <body className="antialiased text-white">
+        <Background3D />
         <div className="bg-orbs" aria-hidden="true">
-          <div className="bg-orb bg-orb-1" />
-          <div className="bg-orb bg-orb-2" />
-          <div className="bg-orb bg-orb-3" />
+          <div className="bg-orb bg-orb-1 opacity-5" />
+          <div className="bg-orb bg-orb-2 opacity-5" />
+          <div className="bg-orb bg-orb-3 opacity-5" />
         </div>
         <Navbar />
-        <main className="page-wrapper">
+        <main className="page-wrapper relative z-10 block">
           {children}
         </main>
       </body>

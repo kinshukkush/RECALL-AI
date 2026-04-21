@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { Brain, Zap, RotateCcw, BarChart3, Upload, ArrowRight, BookOpen, Sparkles } from 'lucide-react';
+import { motion, Variants } from 'framer-motion';
 
 const features = [
   {
@@ -34,72 +37,126 @@ const features = [
   },
 ];
 
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
+};
+
 export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="hero-section">
-        <div className="hero-inner">
-          <div className="hero-badge">
-            <Brain size={14} />
+      <section className="hero-section relative">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[500px] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-900/20 via-transparent to-transparent blur-2xl -z-10 pointer-events-none" />
+        <motion.div 
+          className="hero-inner perspective-container"
+          initial={{ opacity: 0, scale: 0.9, rotateX: 10 }}
+          animate={{ opacity: 1, scale: 1, rotateX: 0 }}
+          transition={{ duration: 0.8, type: "spring" }}
+        >
+          <motion.div 
+            className="hero-badge float-animation shadow-[0_0_20px_rgba(108,99,255,0.4)]"
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Brain size={14} className="animate-pulse" />
             AI-Powered Learning
-          </div>
-          <h1 className="hero-title">
+          </motion.div>
+          <h1 className="hero-title drop-shadow-[0_0_15px_rgba(0,212,255,0.3)]">
             Transform PDFs into
             <br />
-            <span className="gradient-text">Mastery-Level Knowledge</span>
+            <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-lg inline-block hover:scale-[1.02] transition-transform">Mastery-Level Knowledge</span>
           </h1>
-          <p className="hero-subtitle">
+          <p className="hero-subtitle text-gray-300 drop-shadow-md">
             RecallAI turns your study materials into intelligent flashcard decks.
             Practice with spaced repetition, track your progress, and never forget what you learned.
           </p>
-          <div className="hero-buttons">
-            <Link href="/upload" className="btn-primary hero-btn-primary" id="hero-upload-btn">
+          <motion.div 
+            className="hero-buttons"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <Link href="/upload" className="btn-primary hero-btn-primary hover:-translate-y-1 hover:shadow-cyan-500/30 shadow-lg transition-all duration-300" id="hero-upload-btn">
               <Upload size={20} />
               Upload a PDF
               <ArrowRight size={18} />
             </Link>
-            <Link href="/dashboard" className="btn-secondary" id="hero-dashboard-btn">
+            <Link href="/dashboard" className="btn-secondary glass hover:-translate-y-1 hover:shadow-purple-500/20 shadow-sm transition-all duration-300" id="hero-dashboard-btn">
               <BarChart3 size={18} />
               View Dashboard
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Features */}
-      <section className="features-section">
-        <h2 className="section-title">
-          Everything you need to <span className="gradient-text">learn faster</span>
-        </h2>
-        <p className="section-subtitle">
-          RecallAI combines proven cognitive science with modern AI to supercharge your learning.
-        </p>
-        <div className="features-grid">
+      <section className="features-section relative">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="section-title">
+            Everything you need to <span className="gradient-text">learn faster</span>
+          </h2>
+          <p className="section-subtitle">
+            RecallAI combines proven cognitive science with modern AI to supercharge your learning.
+          </p>
+        </motion.div>
+        
+        <motion.div 
+          className="features-grid"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+        >
           {features.map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="feature-card">
-              <div className="feature-icon-wrap">
-                <Icon size={24} />
+            <motion.div key={title} variants={itemVariants} className="feature-card glass hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(108,99,255,0.2)] transition-all duration-300 group">
+              <div className="feature-icon-wrap bg-gradient-to-br from-purple-500/20 to-cyan-500/20 border border-white/5 group-hover:scale-110 transition-transform">
+                <Icon size={24} className="text-cyan-400 drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]" />
               </div>
-              <h3 className="feature-title">{title}</h3>
-              <p className="feature-desc">{desc}</p>
-            </div>
+              <h3 className="feature-title text-white group-hover:text-cyan-300 transition-colors">{title}</h3>
+              <p className="feature-desc text-gray-400">{desc}</p>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* CTA */}
       <section className="cta-section">
-        <div className="cta-card">
-          <h2 className="cta-title">Ready to study smarter?</h2>
-          <p className="cta-subtitle">
-            Upload your first PDF and have AI-generated flashcards ready in under a minute.
-          </p>
-          <Link href="/upload" className="btn-primary" id="cta-upload-btn">
-            <Upload size={18} />
-            Get Started — It&apos;s Free
-          </Link>
-        </div>
+        <motion.div 
+          className="cta-card glass shadow-[0_10px_50px_rgba(236,72,153,0.15)] relative overflow-hidden"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ type: "spring", stiffness: 100 }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 iridescent opacity-30" />
+          <div className="relative z-10">
+            <h2 className="cta-title drop-shadow-lg">Ready to study smarter?</h2>
+            <p className="cta-subtitle text-gray-300">
+              Upload your first PDF and have AI-generated flashcards ready in under a minute.
+            </p>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
+              <Link href="/upload" className="btn-primary shadow-[0_0_20px_rgba(108,99,255,0.5)] border border-white/20" id="cta-upload-btn">
+                <Upload size={18} />
+                Get Started — It&apos;s Free
+              </Link>
+            </motion.div>
+          </div>
+        </motion.div>
       </section>
     </>
   );

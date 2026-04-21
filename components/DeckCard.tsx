@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Deck } from '@/types';
 import { BookOpen, Calendar, Play, Trash2, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface DeckCardProps {
   deck: Deck & { due_count?: number };
@@ -24,13 +25,28 @@ export default function DeckCard({ deck, onDelete }: DeckCardProps) {
   };
 
   return (
-    <div className="deck-card">
-      <div className="deck-card-header">
-        <div className="deck-icon-wrap">
-          <BookOpen size={20} className="deck-icon" />
+    <motion.div 
+      className="deck-card glass relative overflow-hidden group perspective-container"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      whileHover={{ 
+        y: -5,
+        rotateX: 2,
+        rotateY: -2,
+        scale: 1.02,
+        transition: { type: "spring", stiffness: 300 }
+      }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/0 via-cyan-500/0 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute top-0 left-0 w-[2px] h-full bg-gradient-to-b from-cyan-400 to-purple-500 rounded-l-lg opacity-50 group-hover:opacity-100 group-hover:shadow-[0_0_15px_rgba(0,212,255,1)] transition-all duration-300" />
+
+      <div className="deck-card-header relative z-10">
+        <div className="deck-icon-wrap bg-white/5 border border-white/10 group-hover:bg-cyan-500/20 group-hover:border-cyan-500/50 transition-colors">
+          <BookOpen size={20} className="deck-icon text-gray-300 group-hover:text-cyan-400 transition-colors" />
         </div>
         <button
-          className="deck-delete-btn"
+          className="deck-delete-btn hover:bg-red-500/20 hover:text-red-400 transition-colors"
           onClick={handleDelete}
           aria-label="Delete deck"
           id={`delete-deck-${deck.id}`}
@@ -39,8 +55,8 @@ export default function DeckCard({ deck, onDelete }: DeckCardProps) {
         </button>
       </div>
 
-      <div className="deck-card-body">
-        <h3 className="deck-title">{deck.title}</h3>
+      <div className="deck-card-body relative z-10">
+        <h3 className="deck-title text-white group-hover:text-cyan-50 transition-colors">{deck.title}</h3>
         <div className="deck-meta">
           <span className="deck-meta-item">
             <BookOpen size={13} />
@@ -52,22 +68,22 @@ export default function DeckCard({ deck, onDelete }: DeckCardProps) {
           </span>
         </div>
         {(deck.due_count ?? 0) > 0 && (
-          <div className="deck-due-badge">
+          <div className="deck-due-badge bg-orange-500/20 text-orange-400 border border-orange-500/30">
             <Clock size={13} />
             {deck.due_count} due today
           </div>
         )}
       </div>
 
-      <div className="deck-card-footer">
-        <Link href={`/deck/${deck.id}`} className="deck-view-btn">
+      <div className="deck-card-footer relative z-10 border-t border-white/10 mt-4 pt-4">
+        <Link href={`/deck/${deck.id}`} className="deck-view-btn text-gray-400 hover:text-white transition-colors">
           View Cards
         </Link>
-        <Link href={`/review/${deck.id}`} className="deck-review-btn" id={`review-deck-${deck.id}`}>
+        <Link href={`/review/${deck.id}`} className="deck-review-btn flex items-center gap-1.5 px-3 py-1.5 bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500 hover:text-black hover:shadow-[0_0_15px_rgba(0,212,255,0.6)] rounded-md transition-all duration-300 font-medium" id={`review-deck-${deck.id}`}>
           <Play size={15} />
           Review
         </Link>
       </div>
-    </div>
+    </motion.div>
   );
 }
