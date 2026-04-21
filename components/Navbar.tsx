@@ -11,7 +11,6 @@ const navLinks = [
   { href: '/decks', label: 'My Decks', icon: BookOpen },
   { href: '/about', label: 'About', icon: Info },
 ];
-
 export default function Navbar() {
   const pathname = usePathname();
 

@@ -2,15 +2,16 @@
 
 import Link from 'next/link';
 import { Deck } from '@/types';
-import { BookOpen, Calendar, Play, Trash2, Clock } from 'lucide-react';
+import { BookOpen, Calendar, Play, Trash2, Clock, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface DeckCardProps {
   deck: Deck & { due_count?: number };
   onDelete: (id: string) => void;
+  isDeleting?: boolean;
 }
 
-export default function DeckCard({ deck, onDelete }: DeckCardProps) {
+export default function DeckCard({ deck, onDelete, isDeleting }: DeckCardProps) {
   const createdAt = new Date(deck.created_at).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -46,12 +47,13 @@ export default function DeckCard({ deck, onDelete }: DeckCardProps) {
           <BookOpen size={20} className="deck-icon text-gray-300 group-hover:text-cyan-400 transition-colors" />
         </div>
         <button
-          className="deck-delete-btn hover:bg-red-500/20 hover:text-red-400 transition-colors"
+          className="deck-delete-btn hover:bg-red-500/20 hover:text-red-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={handleDelete}
+          disabled={isDeleting}
           aria-label="Delete deck"
           id={`delete-deck-${deck.id}`}
         >
-          <Trash2 size={16} />
+          {isDeleting ? <Loader2 size={16} className="animate-spin text-red-400" /> : <Trash2 size={16} />}
         </button>
       </div>
 

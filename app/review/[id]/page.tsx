@@ -66,15 +66,12 @@ export default function ReviewPage() {
 
     const currentCard = cards[currentIndex];
 
-    try {
-      await fetch('/api/review-card', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cardId: currentCard.id, rating: selectedRating }),
-      });
-    } catch {
-      // Continue even if API fails
-    }
+    // Fire and forget to not block UI
+    fetch('/api/review-card', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cardId: currentCard.id, rating: selectedRating }),
+    }).catch(console.error);
 
     setReviewedCount(prev => prev + 1);
 
@@ -103,7 +100,7 @@ export default function ReviewPage() {
 
   if (completed) return (
     <div className="review-layout">
-      <motion.div 
+      <motion.div
         className="review-complete glass p-10 max-w-lg mx-auto text-center"
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -140,12 +137,12 @@ export default function ReviewPage() {
   const progress = cards.length > 0 ? (reviewedCount / cards.length) * 100 : 0;
 
   return (
-    <div className="review-layout relative overflow-hidden">
+    <div className="review-layout min-h-screen relative overflow-hidden flex flex-col pt-24 pb-12 px-4">
       {/* Background radial gradient for focus */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-cyan-900/10 via-transparent to-transparent pointer-events-none -z-10 blur-3xl opacity-50" />
 
       {/* Header */}
-      <motion.div 
+      <motion.div
         className="review-header flex flex-col sm:flex-row justify-between items-center mb-10 w-full max-w-4xl mx-auto gap-4"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -159,7 +156,7 @@ export default function ReviewPage() {
             <span className="text-cyan-400">{Math.round(progress)}%</span>
           </div>
           <div className="progress-bar h-2 bg-black/40 rounded-full overflow-hidden border border-white/5">
-            <motion.div 
+            <motion.div
               className="progress-fill h-full bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full relative"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
@@ -171,11 +168,12 @@ export default function ReviewPage() {
         </div>
       </motion.div>
 
-      {/* Flashcard Area - Main Content */}
-      <div className="review-flashcard-area flex justify-center w-full relative z-10 flex-col items-center flex-1">
+      {/* Main Study Area */}
+      <div className="flex flex-col items-center justify-center flex-1 w-full gap-4">
+        {/* Flashcard */}
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentCard.id + (showAnswer ? '-back' : '-front')}
+            key={currentCard.id}
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: -20 }}
@@ -189,34 +187,42 @@ export default function ReviewPage() {
             />
           </motion.div>
         </AnimatePresence>
-      </div>
 
-      {/* Rating Buttons - Fixed at Bottom */}
-      <AnimatePresence>
-        {showAnswer && (
-          <motion.div 
-            className="review-actions w-full"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-          >
-            <div className="w-full max-w-4xl mx-auto flex flex-col items-center gap-4">
-              <motion.p 
-                className="text-sm font-semibold text-gray-300 bg-black/50 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md"
-                initial={{ opacity: 0, y: 10 }}
+        {/* Rating Buttons */}
+        <div className="min-h-[120px] w-full flex items-center justify-center relative z-20">
+          <AnimatePresence>
+            {showAnswer && (
+              <motion.div
+                className="w-full"
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
               >
-                How well did you know this?
-              </motion.p>
-              <div className="w-full px-4 sm:px-0">
-                <RatingButtons onRate={handleRate} disabled={rating} />
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                <div className="w-full px-4 mx-auto flex flex-col items-center gap-6">
+                  {/* Premium styled question pill */}
+                  <motion.div
+                    className="relative inline-flex items-center px-6 py-2.5 rounded-full border border-purple-500/30 bg-gradient-to-r from-purple-900/40 via-fuchsia-900/20 to-cyan-900/40 backdrop-blur-md shadow-[0_0_20px_rgba(108,99,255,0.15)] overflow-hidden group"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <span className="relative z-10 text-white/90 text-[13px] font-bold tracking-[0.15em] uppercase drop-shadow-sm">
+                      How well did you know this?
+                    </span>
+                  </motion.div>
+                  
+                  {/* Rating buttons wrapper */}
+                  <div className="w-full max-w-4xl px-2 sm:px-0 flex justify-center">
+                    <RatingButtons onRate={handleRate} disabled={rating} />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
     </div>
   );
 }

@@ -44,16 +44,19 @@ export default function FlashCard({ card, showAnswer, onReveal }: FlashCardProps
       const data = await res.json();
       if (data.explanation) {
         setExplanation(data.explanation);
-        setShowExplanation(true);
+      } else {
+        setExplanation(data.error || "Failed to generate explanation. Please check your API key.");
       }
+      setShowExplanation(true);
     } catch {
-      // silently fail
+      setExplanation("A network error occurred while generating explanation.");
+      setShowExplanation(true);
     }
     setExplaining(false);
   };
 
   return (
-    <div className="perspective-container w-full max-w-700px mx-auto h-[480px]">
+    <div className="w-full max-w-[700px] mx-auto h-[480px] [perspective:1200px]">
       <motion.div
         className="w-full h-full relative"
         initial={false}
@@ -67,7 +70,7 @@ export default function FlashCard({ card, showAnswer, onReveal }: FlashCardProps
         {/* FRONT - Question */}
         <div
           className="flashcard-face glass absolute inset-0 backface-hidden flex flex-col gap-5 p-9 border border-white/10 overflow-y-auto"
-          style={{ backfaceVisibility: "hidden", background: "linear-gradient(135deg, rgba(8,11,20,0.8) 0%, rgba(20,27,45,0.9) 100%)" }}
+          style={{ backfaceVisibility: "hidden", background: "linear-gradient(135deg, rgba(8,11,20,0.8) 0%, rgba(20,27,45,0.9) 100%)", pointerEvents: showAnswer ? 'none' : 'auto' }}
         >
           <div className="card-badges flex gap-2 flex-wrap">
             <span className={`badge ${difficultyColors[card.difficulty]}`}>
@@ -99,7 +102,7 @@ export default function FlashCard({ card, showAnswer, onReveal }: FlashCardProps
         {/* BACK - Answer */}
         <div
           className="flashcard-face glass absolute inset-0 backface-hidden flex flex-col gap-5 p-9 border border-purple-500/30 overflow-y-auto"
-          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", background: "linear-gradient(135deg, rgba(108,99,255,0.15) 0%, rgba(20,27,45,0.95) 100%)" }}
+          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", background: "linear-gradient(135deg, rgba(108,99,255,0.15) 0%, rgba(20,27,45,0.95) 100%)", pointerEvents: showAnswer ? 'auto' : 'none' }}
         >
           <div className="card-badges flex gap-2 flex-wrap">
             <span className={`badge ${difficultyColors[card.difficulty]}`}>
@@ -117,20 +120,19 @@ export default function FlashCard({ card, showAnswer, onReveal }: FlashCardProps
           {/* Explain Better */}
           {showAnswer && (
             <div className="explain-section flex flex-col gap-3 relative z-10">
-              <motion.button
-                className="explain-btn border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 group relative overflow-hidden"
+              <button
+                type="button"
+                className="explain-btn border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 group relative overflow-hidden z-50 pointer-events-auto cursor-pointer flex items-center justify-center gap-2 p-2 rounded-lg transition-all active:scale-95"
                 id="explain-better-btn"
-                onClick={handleExplain}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleExplain(); }}
                 disabled={explaining}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
               >
                 {explaining ? (
-                  <><Loader2 size={16} className="spinning" /> Simplifying...</>
+                  <><Loader2 size={16} className="animate-spin" /> Simplifying...</>
                 ) : (
                   <><Sparkles size={16} className="group-hover:animate-spin" /> Explain Better</>
                 )}
-              </motion.button>
+              </button>
 
               <AnimatePresence>
                 {showExplanation && explanation && (

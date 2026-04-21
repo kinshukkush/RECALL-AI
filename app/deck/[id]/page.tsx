@@ -69,7 +69,7 @@ export default function DeckPage() {
   return (
     <div className="page-content">
       {/* Header */}
-      <motion.div 
+      <motion.div
         className="deck-header bg-gradient-to-r from-cyan-900/10 to-purple-900/10 p-6 rounded-2xl border border-white/5 shadow-inner backdrop-blur-sm mb-8 flex flex-col md:flex-row md:justify-between items-start md:items-end gap-6"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -104,7 +104,7 @@ export default function DeckPage() {
       </motion.div>
 
       {/* Quick Stats */}
-      <motion.div 
+      <motion.div
         className="flex flex-wrap gap-4 mb-8"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -123,7 +123,7 @@ export default function DeckPage() {
 
       {/* Cards Grid */}
       {cards.length === 0 ? (
-        <motion.div 
+        <motion.div
           className="empty-state glass py-16"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -132,15 +132,15 @@ export default function DeckPage() {
           <p className="empty-title text-white">No cards in this deck</p>
         </motion.div>
       ) : (
-        <motion.div 
+        <motion.div
           className="cards-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           {cards.map((card, i) => (
-            <motion.div 
-              key={card.id} 
+            <motion.div
+              key={card.id}
               variants={itemVariants}
               whileHover={{ y: -4, scale: 1.01, z: 10 }}
               className="card-item glass relative overflow-hidden flex flex-col p-6 rounded-2xl border border-white/5 hover:border-cyan-500/30 hover:shadow-[0_8px_25px_rgba(0,212,255,0.1)] transition-all duration-300"

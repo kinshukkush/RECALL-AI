@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function LoadingSpinner({ text = 'Loading...' }: { text?: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 gap-8">
+    <div className="flex flex-col items-center justify-center min-h-screen py-20 gap-8">
       <div className="relative w-24 h-24 perspective-container">
         {/* Outer Ring */}
         <motion.div 

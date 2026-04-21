@@ -17,8 +17,10 @@ export async function POST(request: NextRequest) {
     const explanation = await simplifyAnswer(answer);
 
     return NextResponse.json({ explanation });
-  } catch (error) {
-    console.error('Explain error:', error);
-    return NextResponse.json({ error: 'Failed to generate explanation.' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Explain error:', error?.response?.data || error);
+    return NextResponse.json({ 
+      error: error?.response?.data?.detail || error?.message || 'Failed to generate explanation.'
+    }, { status: 500 });
   }
 }

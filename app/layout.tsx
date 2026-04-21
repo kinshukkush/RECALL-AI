@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     description: 'Convert PDFs into high-quality flashcards and master any subject with AI-powered spaced repetition.',
     type: 'website',
   },
+  icons: {
+    icon: '/logo.svg',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
