@@ -1,8 +1,8 @@
 'use client';
 
 import { LucideIcon } from 'lucide-react';
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useRef, useState, useEffect, MouseEvent } from 'react';
 
 interface StatsCardProps {
   label: string;
@@ -12,61 +12,130 @@ interface StatsCardProps {
   description?: string;
 }
 
-const colorMaps = {
-  blue: 'from-cyan-500/20 to-transparent border-cyan-500/30 text-cyan-400',
-  green: 'from-emerald-500/20 to-transparent border-emerald-500/30 text-emerald-400',
-  red: 'from-rose-500/20 to-transparent border-rose-500/30 text-rose-400',
-  orange: 'from-amber-500/20 to-transparent border-amber-500/30 text-amber-400',
-  purple: 'from-purple-500/20 to-transparent border-purple-500/30 text-purple-400',
-};
-
-const shadowMaps = {
-  blue: 'hover:shadow-cyan-500/20',
-  green: 'hover:shadow-emerald-500/20',
-  red: 'hover:shadow-rose-500/20',
-  orange: 'hover:shadow-amber-500/20',
-  purple: 'hover:shadow-purple-500/20',
-};
-
 export default function StatsCard({ label, value, icon: Icon, color, description }: StatsCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, Math.round);
+  
+  // Animated counter
+  const motionValue = useMotionValue(0);
+  const springValue = useSpring(motionValue, { damping: 50, stiffness: 100 });
+  const [displayValue, setDisplayValue] = useState(0);
 
+  // Mouse position for 3D tilt
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Smooth spring physics for tilt
+  const springConfig = { damping: 25, stiffness: 150 };
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), springConfig);
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), springConfig);
+
+  // Animate counter on mount
   useEffect(() => {
     if (typeof value === 'number') {
-      const animation = animate(count, value, { duration: 2, ease: "easeOut" });
-      return animation.stop;
+      motionValue.set(value);
     }
-  }, [value, count]);
+  }, [value, motionValue]);
+
+  useEffect(() => {
+    const unsubscribe = springValue.on('change', (latest) => {
+      setDisplayValue(Math.round(latest));
+    });
+    return unsubscribe;
+  }, [springValue]);
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    
+    const rect = cardRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    const x = (e.clientX - centerX) / rect.width;
+    const y = (e.clientY - centerY) / rect.height;
+    
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    mouseX.set(0);
+    mouseY.set(0);
+  };
 
   return (
-    <motion.div 
-      className={`relative glass rounded-2xl p-6 border-l-4 overflow-hidden perspective-container transition-all duration-300 ${colorMaps[color]} ${shadowMaps[color]}`}
-      whileHover={{ y: -5, scale: 1.02, rotateX: 5, rotateY: -5 }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-    >
-      <div className={`absolute inset-0 bg-gradient-to-r ${colorMaps[color].split(' ')[0]} opacity-20`} />
-      
-      <div className="relative z-10 flex justify-between items-start mb-4">
-        <motion.div 
-          className={`p-3 rounded-xl bg-white/5 border border-white/10 ${colorMaps[color].split(' ').pop()}`}
-          animate={isHovered ? { scale: 1.1, rotate: [0, -10, 10, 0] } : { scale: 1, rotate: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Icon size={24} />
-        </motion.div>
-      </div>
+    <div className={`stats-card-3d stats-card-${color}`}>
+      <motion.div
+        ref={cardRef}
+        className="stats-card-inner"
+        style={{
+          rotateX,
+          rotateY,
+          transformPerspective: 1000,
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* Ambient light effect following mouse */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(circle at ${(mouseX.get() + 0.5) * 100}% ${(mouseY.get() + 0.5) * 100}%, rgba(255,255,255,0.08) 0%, transparent 50%)`,
+            opacity: isHovered ? 1 : 0,
+          }}
+        />
 
-      <div className="relative z-10">
-        <motion.div className="font-display text-4xl font-bold text-white mb-1 drop-shadow-md">
-          {typeof value === 'number' ? <motion.span>{rounded}</motion.span> : value}
+        {/* Icon Layer - Floats higher in 3D space */}
+        <motion.div 
+          className="stats-icon-layer"
+          animate={isHovered ? { z: 40, scale: 1.1 } : { z: 30, scale: 1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
+          <motion.div 
+            className="stats-icon-wrap-3d"
+            animate={isHovered ? { rotate: [0, -10, 10, 0] } : { rotate: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Icon size={26} strokeWidth={2} />
+          </motion.div>
         </motion.div>
-        <div className="text-sm font-medium text-gray-300 tracking-wide">{label}</div>
-        {description && <div className="text-xs text-gray-500 mt-2">{description}</div>}
-      </div>
-    </motion.div>
+
+        {/* Content Layer */}
+        <div className="stats-content-layer">
+          <motion.div 
+            className="stats-value-3d"
+            animate={isHovered ? { scale: 1.02 } : { scale: 1 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          >
+            {typeof value === 'number' ? displayValue.toLocaleString() : value}
+          </motion.div>
+          
+          <div className="stats-label-3d">{label}</div>
+          
+          {description && (
+            <motion.div 
+              className="stats-description-3d"
+              initial={{ opacity: 0.7 }}
+              animate={{ opacity: isHovered ? 1 : 0.7 }}
+            >
+              {description}
+            </motion.div>
+          )}
+        </div>
+
+        {/* Shine effect on hover */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          initial={{ opacity: 0, x: '-100%' }}
+          animate={isHovered ? { opacity: 1, x: '100%' } : { opacity: 0, x: '-100%' }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
+          style={{
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)',
+          }}
+        />
+      </motion.div>
+    </div>
   );
 }

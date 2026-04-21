@@ -1,8 +1,9 @@
 'use client';
 
+import React, { useRef, useState, MouseEvent } from 'react';
 import Link from 'next/link';
 import { Brain, Zap, RotateCcw, BarChart3, Upload, ArrowRight, BookOpen, Sparkles } from 'lucide-react';
-import { motion, Variants } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform, Variants } from 'framer-motion';
 
 const features = [
   {
@@ -49,6 +50,60 @@ const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
 };
+
+// 3D Tilt Card Component
+function Tilt3DCard({
+  children,
+  className = '',
+  intensity = 6
+}: {
+  children: React.ReactNode;
+  className?: string;
+  intensity?: number;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 20, stiffness: 150 };
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [intensity, -intensity]), springConfig);
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-intensity, intensity]), springConfig);
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
+    const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      className={className}
+      style={{
+        rotateX,
+        rotateY,
+        transformPerspective: 1200,
+        transformStyle: 'preserve-3d',
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={handleMouseLeave}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export default function HomePage() {
   return (
@@ -115,7 +170,7 @@ export default function HomePage() {
           </p>
         </motion.div>
         
-        <motion.div 
+        <motion.div
           className="features-grid"
           variants={containerVariants}
           initial="hidden"
@@ -123,12 +178,14 @@ export default function HomePage() {
           viewport={{ once: true, margin: "-50px" }}
         >
           {features.map(({ icon: Icon, title, desc }) => (
-            <motion.div key={title} variants={itemVariants} className="feature-card glass hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(108,99,255,0.2)] transition-all duration-300 group">
-              <div className="feature-icon-wrap bg-gradient-to-br from-purple-500/20 to-cyan-500/20 border border-white/5 group-hover:scale-110 transition-transform">
-                <Icon size={24} className="text-cyan-400 drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]" />
-              </div>
-              <h3 className="feature-title text-white group-hover:text-cyan-300 transition-colors">{title}</h3>
-              <p className="feature-desc text-gray-400">{desc}</p>
+            <motion.div key={title} variants={itemVariants} className="feature-card-3d">
+              <Tilt3DCard className="feature-card-inner h-full" intensity={4}>
+                <div className="feature-icon-3d bg-gradient-to-br from-purple-500/20 to-cyan-500/20 border border-white/5">
+                  <Icon size={24} className="text-cyan-400 drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]" />
+                </div>
+                <h3 className="feature-title text-white">{title}</h3>
+                <p className="feature-desc text-gray-400">{desc}</p>
+              </Tilt3DCard>
             </motion.div>
           ))}
         </motion.div>
@@ -136,14 +193,16 @@ export default function HomePage() {
 
       {/* CTA */}
       <section className="cta-section">
-        <motion.div 
+        <motion.div
           className="cta-card glass shadow-[0_10px_50px_rgba(236,72,153,0.15)] relative overflow-hidden"
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ type: "spring", stiffness: 100 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 iridescent opacity-30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 opacity-30" />
+          <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-bl from-cyan-500/20 via-transparent to-transparent blur-3xl opacity-40" />
+          <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-purple-500/20 via-transparent to-transparent blur-3xl opacity-30" />
           <div className="relative z-10">
             <h2 className="cta-title drop-shadow-lg">Ready to study smarter?</h2>
             <p className="cta-subtitle text-gray-300">

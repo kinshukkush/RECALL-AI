@@ -5,22 +5,33 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
+const createSeededRandom = (seed: number) => {
+  let t = seed;
+  return () => {
+    t += 0x6d2b79f5;
+    let r = Math.imul(t ^ (t >>> 15), 1 | t);
+    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
 function ParticleField() {
   const ref = useRef<THREE.Points>(null);
 
-  const [positions] = useMemo(() => {
+  const positions = useMemo(() => {
     const count = 500;
     const pos = new Float32Array(count * 3);
+    const random = createSeededRandom(1337);
     for (let i = 0; i < count; i++) {
         // Randomly scatter points in a sphere
-        const r = 20 * Math.cbrt(Math.random());
-        const theta = Math.random() * 2 * Math.PI;
-        const phi = Math.acos(2 * Math.random() - 1);
+        const r = 20 * Math.cbrt(random());
+        const theta = random() * 2 * Math.PI;
+        const phi = Math.acos(2 * random() - 1);
         pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
         pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
         pos[i * 3 + 2] = r * Math.cos(phi);
     }
-    return [pos];
+    return pos;
   }, []);
 
   useFrame((state, delta) => {
