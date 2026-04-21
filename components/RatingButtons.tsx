@@ -233,7 +233,7 @@ function RatingButton({
         animate={isHovered ? {
           scale: 1.15,
           y: -4,
-          rotate: config.value === 'easy' ? [0, -10, 10, 0] : 0
+          rotate: config.value === 'easy' ? -10 : 0
         } : {
           scale: 1,
           y: 0,

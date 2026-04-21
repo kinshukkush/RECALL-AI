@@ -208,7 +208,7 @@ export default function DecksPage() {
             <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
           </div>
 
-          <div className="relative z-10">
+          <div className="relative z-10 w-full">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
               {/* Left content */}
               <div className="flex-1">
@@ -218,10 +218,10 @@ export default function DecksPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                 >
-                  <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                  <div className="p-2 flex-shrink-0 rounded-lg bg-primary/10 border border-primary/20">
                     <Grid3x3 size={20} className="text-primary-light" />
                   </div>
-                  <span className="text-xs font-semibold uppercase tracking-wider text-primary-light/80">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-primary-light/80 line-clamp-1">
                     Your Learning Library
                   </span>
                 </motion.div>
@@ -246,49 +246,49 @@ export default function DecksPage() {
                     : `Manage ${decks.length} deck${decks.length !== 1 ? 's' : ''} and review ${totalCards} cards`
                   }
                 </motion.p>
+
+                {/* CTA Button */}
+                <motion.div
+                  className="mt-8"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <Link
+                    href="/upload"
+                    className="btn-primary group w-full sm:w-auto inline-flex justify-center sm:justify-start"
+                  >
+                    <Plus size={18} />
+                    <span>Create New Deck</span>
+                    <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </motion.div>
               </div>
 
               {/* Right stats */}
               {decks.length > 0 && (
                 <motion.div
-                  className="flex gap-4"
+                  className="flex flex-col sm:flex-row gap-4 shrink-0 w-full lg:w-auto"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <div className="px-6 py-4 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-                    <div className="text-xs text-white/50 uppercase tracking-wider mb-2">Total Cards</div>
-                    <div className="text-3xl font-display font-bold text-white">{totalCards}</div>
+                  <div className="flex-1 sm:flex-none px-6 py-5 rounded-2xl bg-white/[0.03] border border-white/[0.06] min-w-[140px]">
+                    <div className="text-[11px] text-white/50 uppercase tracking-[0.1em] mb-2 whitespace-nowrap font-bold">Total Cards</div>
+                    <div className="text-4xl font-display font-bold text-white">{totalCards}</div>
                   </div>
                   {totalDue > 0 && (
-                    <div className="px-6 py-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
-                      <div className="text-xs text-amber-400/80 uppercase tracking-wider mb-2 flex items-center gap-1">
-                        <Zap size={12} />
+                    <div className="flex-1 sm:flex-none px-6 py-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 min-w-[140px]">
+                      <div className="text-[11px] text-amber-400/80 uppercase tracking-[0.1em] mb-2 flex items-center gap-1.5 whitespace-nowrap font-bold">
+                        <Zap size={13} className="text-amber-400" />
                         Due Today
                       </div>
-                      <div className="text-3xl font-display font-bold text-amber-400">{totalDue}</div>
+                      <div className="text-4xl font-display font-bold text-amber-400 shadow-amber-400/20 drop-shadow-lg">{totalDue}</div>
                     </div>
                   )}
                 </motion.div>
               )}
             </div>
-
-            {/* CTA Button */}
-            <motion.div
-              className="mt-8"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              <Link
-                href="/upload"
-                className="btn-primary group w-full md:w-auto inline-flex justify-center md:justify-start"
-              >
-                <Plus size={18} />
-                <span>Create New Deck</span>
-                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-              </Link>
-            </motion.div>
           </div>
         </Tilt3DCard>
       </motion.div>
