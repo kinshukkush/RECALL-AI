@@ -171,7 +171,7 @@ export default function ReviewPage() {
         </div>
       </motion.div>
 
-      {/* Flashcard Area */}
+      {/* Flashcard Area - Main Content */}
       <div className="review-flashcard-area flex justify-center w-full relative z-10 flex-col items-center flex-1">
         <AnimatePresence mode="wait">
           <motion.div
@@ -191,30 +191,32 @@ export default function ReviewPage() {
         </AnimatePresence>
       </div>
 
-      {/* Rating Buttons */}
+      {/* Rating Buttons - Fixed at Bottom */}
       <AnimatePresence>
         {showAnswer && (
           <motion.div 
-            className="review-actions mt-8 w-full z-20 flex flex-col items-center gap-4 fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#080b14] via-[#080b14]/90 to-transparent pointer-events-none"
+            className="review-actions w-full"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
           >
-            <div className="pointer-events-auto w-full max-w-4xl mx-auto flex flex-col items-center gap-3">
-              <p className="text-sm font-medium text-gray-400 bg-black/40 px-4 py-1.5 rounded-full border border-white/5 backdrop-blur-md">
+            <div className="w-full max-w-4xl mx-auto flex flex-col items-center gap-4">
+              <motion.p 
+                className="text-sm font-semibold text-gray-300 bg-black/50 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+              >
                 How well did you know this?
-              </p>
-              <div className="w-full">
+              </motion.p>
+              <div className="w-full px-4 sm:px-0">
                 <RatingButtons onRate={handleRate} disabled={rating} />
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-      
-      {/* Spacer to prevent hidden content at the bottom when review actions appear */}
-      <div className="h-32 w-full flex-shrink-0" />
     </div>
   );
 }
