@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to read PDF. Ensure it is not encrypted or corrupted.' }, { status: 422 });
     }
 
-    if (!rawText || rawText.length < 100) {
+    if (!rawText || rawText.length < 20) {
       return NextResponse.json({ error: 'PDF appears to be empty or contains no extractable text.' }, { status: 422 });
     }
 
@@ -95,16 +95,24 @@ export async function POST(request: NextRequest) {
 
     // Insert all cards
     const today = new Date().toISOString().split('T')[0];
-    const cardsToInsert = flashcards.map(card => ({
-      deck_id: deck.id,
-      question: card.question,
-      answer: card.answer,
-      difficulty: card.difficulty || 'medium',
-      type: card.type || 'concept',
-      interval: 1,
-      ease_factor: 2.5,
-      next_review: today,
-    }));
+    const cardsToInsert = flashcards.map(card => {
+      let difficulty = String(card.difficulty || 'medium').toLowerCase();
+      if (!['easy', 'medium', 'hard'].includes(difficulty)) difficulty = 'medium';
+
+      let type = String(card.type || 'concept').toLowerCase();
+      if (!['definition', 'concept', 'application', 'reasoning'].includes(type)) type = 'concept';
+
+      return {
+        deck_id: deck.id,
+        question: card.question || 'Missing question',
+        answer: card.answer || 'Missing answer',
+        difficulty,
+        type,
+        interval: 1,
+        ease_factor: 2.5,
+        next_review: today,
+      };
+    });
 
     const { error: cardsError } = await supabase
       .from('cards')
