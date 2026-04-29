@@ -69,7 +69,7 @@ export default function FlashCard({ card, showAnswer, onReveal }: FlashCardProps
 
         {/* FRONT - Question */}
         <div
-          className="flashcard-face glass absolute inset-0 backface-hidden flex flex-col gap-5 p-9 border border-white/10 overflow-y-auto"
+          className="flashcard-face glass absolute inset-0 backface-hidden flex flex-col gap-5 p-9 pb-12 border border-white/10 overflow-y-auto custom-scrollbar"
           style={{ backfaceVisibility: "hidden", background: "linear-gradient(135deg, rgba(8,11,20,0.8) 0%, rgba(20,27,45,0.9) 100%)", pointerEvents: showAnswer ? 'none' : 'auto' }}
         >
           <div className="card-badges flex gap-2 flex-wrap">
@@ -101,8 +101,8 @@ export default function FlashCard({ card, showAnswer, onReveal }: FlashCardProps
 
         {/* BACK - Answer */}
         <div
-          className="flashcard-face glass absolute inset-0 backface-hidden flex flex-col gap-5 p-9 border border-purple-500/30 overflow-y-auto"
-          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", background: "linear-gradient(135deg, rgba(108,99,255,0.15) 0%, rgba(20,27,45,0.95) 100%)", pointerEvents: showAnswer ? 'auto' : 'none' }}
+          className="flashcard-face glass absolute inset-0 backface-hidden flex flex-col gap-5 p-9 pb-12 border border-primary/30 overflow-y-auto custom-scrollbar"
+          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", background: "linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(20,27,45,0.95) 100%)", pointerEvents: showAnswer ? 'auto' : 'none' }}
         >
           <div className="card-badges flex gap-2 flex-wrap">
             <span className={`badge ${difficultyColors[card.difficulty]}`}>
@@ -122,7 +122,7 @@ export default function FlashCard({ card, showAnswer, onReveal }: FlashCardProps
             <div className="explain-section flex flex-col gap-3 relative z-10">
               <button
                 type="button"
-                className="explain-btn border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 group relative overflow-hidden z-50 pointer-events-auto cursor-pointer flex items-center justify-center gap-2 p-2 rounded-lg transition-all active:scale-95"
+                className="explain-btn border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary-light group relative overflow-hidden z-50 pointer-events-auto cursor-pointer flex items-center justify-center gap-2 p-3 rounded-xl transition-all active:scale-95 shadow-[0_4px_15px_rgba(99,102,241,0.15)] hover:shadow-[0_4px_20px_rgba(99,102,241,0.3)]"
                 id="explain-better-btn"
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleExplain(); }}
                 disabled={explaining}
@@ -137,16 +137,16 @@ export default function FlashCard({ card, showAnswer, onReveal }: FlashCardProps
               <AnimatePresence>
                 {showExplanation && explanation && (
                   <motion.div
-                    className="explanation-box glass border-cyan-500/30 bg-cyan-900/20"
+                    className="explanation-box glass border-primary/30 bg-primary/20"
                     initial={{ opacity: 0, height: 0, y: -10 }}
                     animate={{ opacity: 1, height: "auto", y: 0 }}
                     exit={{ opacity: 0, height: 0 }}
                   >
-                    <p className="explanation-label text-cyan-400 border-b border-cyan-500/20 pb-2 mb-2">
+                    <p className="explanation-label text-primary-light border-b border-primary/20 pb-2 mb-2">
                       <Sparkles size={14} /> Simplified
                     </p>
                     <p className="explanation-text text-gray-300">{explanation}</p>
-                    <button className="hide-explain-btn hover:text-cyan-300 mt-2" onClick={() => setShowExplanation(false)}>
+                    <button className="hide-explain-btn hover:text-primary-light mt-2" onClick={() => setShowExplanation(false)}>
                       <EyeOff size={14} /> Hide
                     </button>
                   </motion.div>

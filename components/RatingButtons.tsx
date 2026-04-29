@@ -136,7 +136,7 @@ function RatingButton({
       aria-label={`Rate as ${config.label}`}
       className={`
         relative w-full flex flex-col items-center justify-center
-        py-5 px-3 rounded-2xl
+        py-6 px-3 rounded-2xl min-h-[110px]
         border ${config.colors.border}
         ${config.colors.bg}
         backdrop-blur-sm

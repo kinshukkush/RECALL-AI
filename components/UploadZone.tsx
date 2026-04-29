@@ -97,7 +97,7 @@ export default function UploadZone() {
     <div className="upload-container relative">
       {/* Drop Zone */}
       <motion.div
-        className={`drop-zone glass relative overflow-hidden transition-all duration-300 ${isDragging ? 'border-cyan-400 bg-cyan-500/10 shadow-[0_0_30px_rgba(0,212,255,0.3)]' : 'border-white/20 bg-white/5'} ${file ? 'border-emerald-400 bg-emerald-500/5 cursor-default' : 'cursor-pointer border-dashed border-2'}`}
+        className={`drop-zone glass relative overflow-hidden transition-all duration-300 ${isDragging ? 'border-primary bg-primary/10 shadow-[0_0_30px_rgba(99,102,241,0.3)]' : 'border-white/20 bg-white/5'} ${file ? 'border-emerald-400 bg-emerald-500/5 cursor-default' : 'cursor-pointer border-dashed border-2'}`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -116,7 +116,7 @@ export default function UploadZone() {
         {/* Animated Dashed Border (visible when empty) */}
         {!file && (
           <div className="absolute inset-0 pointer-events-none rounded-[inherit] overflow-hidden" style={{ padding: '2px' }}>
-            <div className="absolute inset-0 bg-[length:200%_100%] animate-[iridescentBg_3s_linear_infinite] opacity-50" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.8) 50%, transparent 100%)', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 2px, 2px 2px, 2px calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 2px, 0 2px)' }}></div>
+            <div className="absolute inset-0 bg-[length:200%_100%] animate-[iridescentBg_3s_linear_infinite] opacity-50" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.8) 50%, transparent 100%)', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 2px, 2px 2px, 2px calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 2px, 0 2px)' }}></div>
           </div>
         )}
 
@@ -133,7 +133,7 @@ export default function UploadZone() {
               exit={{ opacity: 0, scale: 0.9 }}
             >
               <div className="upload-icon-wrap glass bg-gradient-to-br from-purple-500/20 to-cyan-500/20 w-20 h-20 rounded-full flex items-center justify-center mb-6 float-animation shadow-[0_0_20px_rgba(108,99,255,0.3)]">
-                <CloudUpload size={40} className="text-cyan-400 drop-shadow-[0_0_8px_rgba(0,212,255,0.8)]" />
+                <CloudUpload size={40} className="text-primary-light drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
               </div>
               <p className="drop-title text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-2">Drop your PDF here</p>
               <p className="drop-subtitle text-gray-400 mb-2">or click to browse files</p>
@@ -141,7 +141,7 @@ export default function UploadZone() {
 
               {/* Particles on drag over */}
               {isDragging && (
-                <Sparkles className="absolute -top-4 -right-4 text-cyan-400 animate-ping opacity-75" size={24} />
+                <Sparkles className="absolute -top-4 -right-4 text-primary-light animate-ping opacity-75" size={24} />
               )}
             </motion.div>
           ) : (
@@ -196,8 +196,9 @@ export default function UploadZone() {
         {error && (
           <motion.div
             className="error-banner flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400"
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: [-5, 5, -5, 5, 0] }}
+            transition={{ duration: 0.4 }}
             exit={{ opacity: 0, scale: 0.95 }}
           >
             <X size={16} />

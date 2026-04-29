@@ -11,7 +11,7 @@ import {
   ArrowRight,
   Sparkles,
   Zap,
-  Grid3x3,
+  Library,
   Plus,
   AlertCircle
 } from 'lucide-react';
@@ -161,7 +161,7 @@ export default function DecksPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        <Tilt3DCard className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-br from-[#0f0f15] to-[#080808] p-8 md:p-12 mb-12">
+        <Tilt3DCard className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-br from-[#0f0f15] to-[#080808] p-10 md:p-16 min-h-[320px] flex flex-col justify-center mb-12">
           {/* Background effects */}
           <motion.div
             className="absolute -top-40 -right-40 w-80 h-80 bg-primary/15 rounded-full blur-[120px] pointer-events-none"
@@ -213,15 +213,15 @@ export default function DecksPage() {
               {/* Left content */}
               <div className="flex-1">
                 <motion.div
-                  className="flex items-center gap-3 mb-6"
+                  className="inline-flex items-center gap-3 mb-6"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                 >
                   <div className="p-2 flex-shrink-0 rounded-lg bg-primary/10 border border-primary/20">
-                    <Grid3x3 size={20} className="text-primary-light" />
+                    <Library size={20} className="text-primary-light" />
                   </div>
-                  <span className="text-xs font-semibold uppercase tracking-wider text-primary-light/80 line-clamp-1">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-primary-light/80">
                     Your Learning Library
                   </span>
                 </motion.div>
@@ -268,22 +268,22 @@ export default function DecksPage() {
               {/* Right stats */}
               {decks.length > 0 && (
                 <motion.div
-                  className="flex flex-col sm:flex-row gap-4 shrink-0 w-full lg:w-auto"
+                  className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <div className="flex-1 sm:flex-none px-6 py-5 rounded-2xl bg-white/[0.03] border border-white/[0.06] min-w-[140px]">
-                    <div className="text-[11px] text-white/50 uppercase tracking-[0.1em] mb-2 whitespace-nowrap font-bold">Total Cards</div>
-                    <div className="text-4xl font-display font-bold text-white">{totalCards}</div>
+                  <div className="flex-1 w-full sm:w-auto px-6 py-6 rounded-2xl bg-white/[0.03] border border-white/[0.06] shadow-lg flex flex-col justify-center">
+                    <div className="text-[12px] text-white/50 uppercase tracking-[0.1em] mb-2 font-bold">Total Cards</div>
+                    <div className="text-5xl font-display font-bold text-white tracking-tight">{totalCards}</div>
                   </div>
                   {totalDue > 0 && (
-                    <div className="flex-1 sm:flex-none px-6 py-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 min-w-[140px]">
-                      <div className="text-[11px] text-amber-400/80 uppercase tracking-[0.1em] mb-2 flex items-center gap-1.5 whitespace-nowrap font-bold">
-                        <Zap size={13} className="text-amber-400" />
+                    <div className="flex-1 w-full sm:w-auto px-6 py-6 rounded-2xl bg-amber-500/10 border border-amber-500/20 shadow-lg flex flex-col justify-center">
+                      <div className="text-[12px] text-amber-400/80 uppercase tracking-[0.1em] mb-2 flex items-center gap-1.5 font-bold">
+                        <Zap size={14} className="text-amber-400 shrink-0" />
                         Due Today
                       </div>
-                      <div className="text-4xl font-display font-bold text-amber-400 shadow-amber-400/20 drop-shadow-lg">{totalDue}</div>
+                      <div className="text-5xl font-display font-bold text-amber-400 shadow-amber-400/20 drop-shadow-lg tracking-tight">{totalDue}</div>
                     </div>
                   )}
                 </motion.div>

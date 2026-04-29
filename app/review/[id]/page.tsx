@@ -66,7 +66,24 @@ export default function ReviewPage() {
 
     const currentCard = cards[currentIndex];
 
-    // Fire and forget to not block UI
+    if (selectedRating === 'again') {
+      // Re-queue this card at the end without submitting a review
+      setTimeout(() => {
+        setCards(prev => {
+          const newCards = [...prev];
+          // Remove current and push to end
+          const [card] = newCards.splice(currentIndex, 1);
+          newCards.push(card);
+          return newCards;
+        });
+        setShowAnswer(false);
+        setRating(false);
+        // Don't advance index — the next card slides in because we removed the current one
+      }, 300);
+      return;
+    }
+
+    // Fire and forget for good/hard/easy
     fetch('/api/review-card', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -77,6 +94,7 @@ export default function ReviewPage() {
 
     // Move to next card
     setTimeout(() => {
+      // After removing the current card (via 'again' above) or incrementing index
       if (currentIndex + 1 >= cards.length) {
         setCompleted(true);
       } else {

@@ -70,22 +70,28 @@ export default function DeckPage() {
     <div className="page-content">
       {/* Header */}
       <motion.div
-        className="deck-header bg-gradient-to-r from-cyan-900/10 to-purple-900/10 p-6 rounded-2xl border border-white/5 shadow-inner backdrop-blur-sm mb-8 flex flex-col md:flex-row md:justify-between items-start md:items-end gap-6"
+        className="deck-header bg-gradient-to-br from-indigo-900/20 via-purple-900/10 to-cyan-900/15 p-8 md:p-10 rounded-3xl border border-white/[0.08] shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-md mb-10 flex flex-col md:flex-row md:justify-between items-start md:items-end gap-6 relative overflow-hidden"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div className="deck-header-info flex-1">
-          <Link href="/decks" className="btn-secondary glass hover:bg-white/10 mb-4 inline-flex shadow-sm">
-            <ArrowLeft size={16} /> All Decks
+        {/* Background glow accent */}
+        <div className="absolute -top-20 -right-20 w-60 h-60 bg-primary/15 rounded-full blur-[80px] pointer-events-none" />
+        <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-accent/10 rounded-full blur-[80px] pointer-events-none" />
+
+        <div className="deck-header-info flex-1 relative z-10">
+          <Link href="/decks" className="btn-secondary glass hover:bg-white/10 mb-5 inline-flex shadow-sm text-sm py-2.5 px-4 gap-2">
+            <ArrowLeft size={15} /> All Decks
           </Link>
-          <h1 className="page-title text-4xl font-bold bg-gradient-to-br from-white to-gray-300 bg-clip-text text-transparent drop-shadow-sm">{deck.title}</h1>
-          <p className="page-subtitle mt-2 text-gray-400">
-            {cards.length} flashcards
-            {deck.source_filename && ` · from ${deck.source_filename}`}
-            {' · '}Created {new Date(deck.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-br from-white via-white/90 to-gray-300 bg-clip-text text-transparent drop-shadow-sm leading-tight mb-3">{deck.title}</h1>
+          <p className="mt-1 text-gray-400 text-base leading-relaxed">
+            <span className="text-white/70 font-medium">{cards.length}</span> flashcards
+            {deck.source_filename && <span className="text-white/40 mx-2">·</span>}
+            {deck.source_filename && <span className="text-accent/80">{deck.source_filename}</span>}
+            <span className="text-white/40 mx-2">·</span>
+            <span>Created {new Date(deck.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
           </p>
         </div>
-        <div className="deck-header-actions flex gap-3">
+        <div className="deck-header-actions flex gap-3 relative z-10">
           {dueCards.length > 0 && (
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link href={`/review/${id}`} className="btn-primary shadow-[0_0_20px_rgba(34,211,238,0.4)]" id="start-review-btn">

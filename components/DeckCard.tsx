@@ -39,12 +39,12 @@ export default function DeckCard({ deck, onDelete, isDeleting }: DeckCardProps) 
         transition: { type: "spring", stiffness: 300 }
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/0 via-cyan-500/0 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      <div className="absolute top-0 left-0 w-[2px] h-full bg-gradient-to-b from-cyan-400 to-purple-500 rounded-l-lg opacity-50 group-hover:opacity-100 group-hover:shadow-[0_0_15px_rgba(0,212,255,1)] transition-all duration-300" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-primary/0 via-accent/0 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-[2px] h-full bg-gradient-to-b from-primary to-accent rounded-l-lg opacity-50 group-hover:opacity-100 group-hover:shadow-[0_0_15px_rgba(99,102,241,0.8)] transition-all duration-300 pointer-events-none" />
 
       <div className="deck-card-header relative z-10">
-        <div className="deck-icon-wrap bg-white/5 border border-white/10 group-hover:bg-cyan-500/20 group-hover:border-cyan-500/50 transition-colors">
-          <BookOpen size={20} className="deck-icon text-gray-300 group-hover:text-cyan-400 transition-colors" />
+        <div className="deck-icon-wrap bg-white/5 border border-white/10 group-hover:bg-primary/20 group-hover:border-primary/50 transition-colors">
+          <BookOpen size={20} className="deck-icon text-gray-300 group-hover:text-primary-light transition-colors" />
         </div>
         <button
           className="deck-delete-btn hover:bg-red-500/20 hover:text-red-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -58,7 +58,7 @@ export default function DeckCard({ deck, onDelete, isDeleting }: DeckCardProps) 
       </div>
 
       <div className="deck-card-body relative z-10">
-        <h3 className="deck-title text-white group-hover:text-cyan-50 transition-colors">{deck.title}</h3>
+        <h3 className="deck-title text-white group-hover:text-primary-light transition-colors truncate" title={deck.title}>{deck.title}</h3>
         <div className="deck-meta">
           <span className="deck-meta-item">
             <BookOpen size={13} />
@@ -77,11 +77,11 @@ export default function DeckCard({ deck, onDelete, isDeleting }: DeckCardProps) 
         )}
       </div>
 
-      <div className="deck-card-footer relative z-10 border-t border-white/10 mt-4 pt-4">
-        <Link href={`/deck/${deck.id}`} className="deck-view-btn text-gray-400 hover:text-white transition-colors">
+      <div className="deck-card-footer relative z-10 border-t border-white/10 mt-4 pt-4 flex justify-between items-center">
+        <Link href={`/deck/${deck.id}`} className="deck-view-btn text-sm text-gray-400 hover:text-white transition-colors px-3 py-2 rounded-md hover:bg-white/5">
           View Cards
         </Link>
-        <Link href={`/review/${deck.id}`} className="deck-review-btn flex items-center gap-1.5 px-3 py-1.5 bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500 hover:text-black hover:shadow-[0_0_15px_rgba(0,212,255,0.6)] rounded-md transition-all duration-300 font-medium" id={`review-deck-${deck.id}`}>
+        <Link href={`/review/${deck.id}`} className="deck-review-btn flex items-center gap-1.5 px-4 py-2 bg-primary/20 text-primary-light hover:bg-primary hover:text-white hover:shadow-[0_0_15px_rgba(99,102,241,0.6)] rounded-md transition-all duration-300 font-medium" id={`review-deck-${deck.id}`}>
           <Play size={15} />
           Review
         </Link>
